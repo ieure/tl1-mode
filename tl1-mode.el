@@ -242,7 +242,7 @@
                             "mask")
   "TL/1 built-in keywords.")
 
-(setq tl1-mode-font-lock-keywords
+(defvar tl1-mode-font-lock-keywords
   `(
     ;; Built-ins
     (,tl1-builtins . font-lock-builtin-face)
@@ -262,7 +262,8 @@
     ("\\b\\(\\(?:\\sw\\|\\s_\\)+\\)\\s-+=" (1 font-lock-variable-name-face))
 
     ;; Constants
-    ("\\b\\([0-9]+\\|\$[0-9a-f]+\\)" . font-lock-constant-face)))
+    ("\\b\\([0-9]+\\|\$[0-9a-f]+\\)" . font-lock-constant-face))
+  "Font-locking defintions for tl1-mode.")
 
 (defvar tl1-mode-syntax-table
   (let ((table (make-syntax-table)))
