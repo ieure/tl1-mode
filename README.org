@@ -1,0 +1,10 @@
+* TL/1 Mode for Emacs
+
+  This is a major mode for editing [[http://arcarc.xmission.com/Test%2520Equipment/Fluke/9100%2520Fixture/9100%2520Programmer.pdf][Fluke TL/1]] source code.  TL/1 is a
+  language used to control Fluke’s 9100 series of testing &
+  troubleshooting mainframes.
+
+  I wrote this because I like having syntax highlighting and automatic
+  indentation, which are feaures the 9100’s built-in editor lacks.
+
+  Please report any issues with the GitHub issue tracker.
