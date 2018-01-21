@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; This is a minor mode for editing Fluke TL/1 source code.
+;; This is a major mode for editing Fluke TL/1 source code.
 
 ;;; Code:
 
