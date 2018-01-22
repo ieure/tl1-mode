@@ -8,3 +8,8 @@
   indentation, which are feaures the 9100’s built-in editor lacks.
 
   Please report any issues with the GitHub issue tracker.
+
+** Other projects of interest
+
+   - [[https://github.com/ieure/fcw][Fluke Compiler Wrapper]]
+   - [[https://github.com/ieure/9lc-mode][9LC Mode]]

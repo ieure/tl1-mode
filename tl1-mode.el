@@ -3,6 +3,7 @@
 ;; Copyright (C) 2017, 2018  Ian Eure
 
 ;; Author: Ian Eure <ian.eure@gmail.com>
+;; Version: 0.5
 ;; Keywords: languages
 
 ;; This program is free software; you can redistribute it and/or modify
