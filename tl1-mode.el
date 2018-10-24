@@ -4,6 +4,8 @@
 
 ;; Author: Ian Eure <ian.eure@gmail.com>
 ;; Version: 0.6
+;; URL: https://github.com/ieure/tl1-mode
+;; Package-Requires: ((emacs "24"))
 ;; Keywords: languages
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -206,7 +208,8 @@
   "TL/1 built-in functions.")
 
 (defconst tl1-operators
-  (tl1-mode-word-opt* "and" "or" "shr")
+  (tl1-mode-word-opt* "and" "or" "xor" "shl" "shr" "cpl" "setbit"
+                      "msb" "lsb" "bitmask" "len" "not")
   "TL/1 built-in operators.")
 
 (defconst tl1-types
