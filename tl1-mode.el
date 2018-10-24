@@ -361,6 +361,7 @@
   (setq tab-always-indent t)
 
   (set-syntax-table tl1-mode-syntax-table)
+  (setq comment-start "!")
   (setq comment-use-syntax t)
   (setq fill-prefix nil)
   (setq indent-line-function #'tl1-mode-indent)
