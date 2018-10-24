@@ -293,14 +293,17 @@
    ;; Start of a block
    ((or (looking-at "^\\s-*\\(program\\|function\\|loop\\)")
         (looking-at "^\\s-*declare\\s-*\\(!.*\\)?$")
-        (looking-at "^\\s-*if.*then\\s-*\\(!.*\\)?$"))
+        (looking-at "^\\s-*if.*then\\s-*\\(!.*\\)?$")
+        (looking-at "^\\s-*arm\\s-+device\\s-+"))
     :start)
 
    ;; End of one block, start of another.
    ((looking-at "^\\s-*else") :start-end)
 
    ;; End of a block
-   ((looking-at "^\\s-*end") :end)
+   ((or (looking-at "^\\s-*end")
+        (looking-at "^\\s-*readout\\s-+device\\s-+"))
+    :end)
    (t nil)))
 
 (defun tl1-mode-indent ()
