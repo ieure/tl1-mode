@@ -29,9 +29,10 @@
 ;;; Code:
 
 (require 'eldoc)
+(require 'cl-lib)
 
 (defun tl1-mode--word-opt (words)
-  "Wrap a regexp so it only matches on word boundaries."
+  "Return a regexp to match whole words in a string in the list WORDS."
   (concat "\\b" (regexp-opt words) "\\b"))
 
 (defconst tl1-mode--keywords
@@ -1327,9 +1328,9 @@
 
 (defconst tl1-mode--builtin-re
   (tl1-mode--word-opt
-   (remove-if (lambda (builtin)
-                (seq-contains tl1-mode--keywords builtin))
-   (mapcar #'car tl1-mode--function-documentation)))
+   (cl-remove-if (lambda (builtin)
+                   (seq-contains tl1-mode--keywords builtin))
+                 (mapcar #'car tl1-mode--function-documentation)))
   "TL/1 built-in functions.")
 
 (defconst tl1-mode--operator-re
@@ -1363,7 +1364,7 @@
 
     ;; Constants
     ("\\b\\([0-9]+\\|\$[0-9a-f]+\\)" . font-lock-constant-face))
-  "Font-locking defintions for tl1-mode.")
+  "Font-locking defintions for ‘tl1-mode’.")
 
 (defvar tl1-mode--syntax-table
   (let ((table (make-syntax-table)))
@@ -1482,7 +1483,7 @@
   (with-temp-buffer
     (tl1-mode)
     (insert doc)
-    (font-lock-fontify-buffer)
+    (font-lock-ensure (point-min) (point-max))
     (buffer-substring (point-min) (point-max))))
 
 (defun tl1-mode--eldoc-function-at-point ()
