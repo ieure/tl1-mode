@@ -9,6 +9,16 @@
 
   Please report any issues with the GitHub issue tracker.
 
+** ElDoc support
+
+As of version 0.8, TL/1 Mode supports using ElDoc to provide
+contextual help.  You can enable it by adding the following line to
+your Emacs init files:
+
+#+BEGIN_SRC emacs-lisp -n -r
+(add-hook 'tl1-mode-hook #'tl1-mode-eldoc-enable)
+#+END_SRC
+
 ** Other projects of interest
 
    - [[https://github.com/ieure/fcw][Fluke Compiler Wrapper]]
