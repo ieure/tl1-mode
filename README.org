@@ -1,6 +1,6 @@
 * TL/1 Mode for Emacs
 
-  This is a major mode for editing [[http://arcarc.xmission.com/Test%2520Equipment/Fluke/9100%2520Fixture/9100%2520Programmer.pdf][Fluke TL/1]] source code.  TL/1 is a
+  This is a major mode for editing [[http://arcarc.xmission.com/Test%20Equipment/Fluke/9100%20Fixture/9100%20Programmer.pdf][Fluke TL/1]] source code.  TL/1 is a
   language used to control Fluke’s 9100 series of testing &
   troubleshooting mainframes.
 
