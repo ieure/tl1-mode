@@ -1412,8 +1412,8 @@
 (defun tl1-mode-indent ()
   "Indent line for TL/1 mode."
   (interactive)
-  (indent-line-to
-   (save-excursion
+  (save-excursion
+    (indent-line-to
      (save-match-data
        (let* ((case-fold-search t)
               (block (save-excursion (goto-char (line-beginning-position))
