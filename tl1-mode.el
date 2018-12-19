@@ -1388,8 +1388,11 @@
      :START-END -- End of the previous block, and the start of a new one.
      NIL        -- Not a block member, a normal statement."
   (cond
+   ;; Empty line
+   ((re-search-forward "^\\s-*$" (line-end-position) t) nil)
+
    ;; Start of a block
-   ((or (looking-at "^\\s-*\\(program\\|function\\|loop\\)")
+   ((or (looking-at "^\\s-*\\(program\\|function\\|loop\\|handle\\|exercise\\)")
         (looking-at "^\\s-*declare\\s-*\\(!.*\\)?$")
         (looking-at "^\\s-*if.*then\\s-*\\(!.*\\)?$")
         (looking-at "^\\s-*arm\\s-+device\\s-+"))
@@ -1402,6 +1405,8 @@
    ((or (looking-at "^\\s-*end")
         (looking-at "^\\s-*readout\\s-+device\\s-+"))
     :end)
+
+   ;; Any other line
    (t nil)))
 
 (defun tl1-mode-indent ()
