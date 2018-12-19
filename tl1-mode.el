@@ -1374,6 +1374,9 @@
     (modify-syntax-entry ?\n ">" table)
     table))
 
+(defun tl1-mode--line-blankp ()
+  (re-search-forward "^\\s-*$" (line-end-position) t))
+
 (defun tl1-mode--skipback ()
   "Move backwards to the first non-blank line, or beginning of buffer."
   (while (progn (forward-line -1)
@@ -1389,7 +1392,7 @@
      NIL        -- Not a block member, a normal statement."
   (cond
    ;; Empty line
-   ((re-search-forward "^\\s-*$" (line-end-position) t) nil)
+   ((tl1-mode--line-blankp) nil)
 
    ;; Start of a block
    ((or (looking-at "^\\s-*\\(program\\|function\\|loop\\|handle\\|exercise\\)")
@@ -1453,7 +1456,12 @@
           ((eq block :end) (- last-indent tab-width))
 
           ;; Catch-all
-          (t last-indent)))))))
+          (t last-indent))))))
+
+  ;; If the line is blank, move point to the end of it.
+  (when (tl1-mode--line-blankp)
+    (goto-char (line-end-position))))
+
 
 
 ;;;###autoload
