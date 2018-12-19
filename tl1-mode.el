@@ -1413,7 +1413,7 @@
        (let* ((case-fold-search t)
               (block (save-excursion (goto-char (line-beginning-position))
                                      (tl1-mode--line-type)))
-              (last-line (save-excursion (tl1-mode-skipback)
+              (last-line (save-excursion (tl1-mode--skipback)
                                          (cons
                                           (current-indentation)
                                           (tl1-mode--line-type))))
