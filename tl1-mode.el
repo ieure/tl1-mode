@@ -1380,7 +1380,10 @@
 (defun tl1-mode--skipback ()
   "Move backwards to the first non-blank line, or beginning of buffer."
   (while (progn (forward-line -1)
-                (and (not (bobp)) (looking-at "^\\s-*$")))))
+                (and (not (bobp))
+                     (or
+                      (looking-at "^\\s-*$")
+                      (looking-at "^\\s-*!.*$"))))))
 
 (defun tl1-mode--line-type ()
   "Determine the type of the current line.
