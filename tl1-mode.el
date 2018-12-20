@@ -1398,7 +1398,8 @@
    ((or (looking-at "^\\s-*\\(program\\|function\\|loop\\|handle\\|exercise\\)")
         (looking-at "^\\s-*declare\\s-*\\(!.*\\)?$")
         (looking-at "^\\s-*if.*then\\s-*\\(!.*\\)?$")
-        (looking-at "^\\s-*arm\\s-+device\\s-+"))
+        (looking-at "^\\s-*arm\\s-+device\\s-+")
+        (looking-at "^\\s-*for\\s-+"))
     :start)
 
    ;; End of one block, start of another.
@@ -1406,6 +1407,7 @@
 
    ;; End of a block
    ((or (looking-at "^\\s-*end")
+        (looking-at "^\\s-*next")
         (looking-at "^\\s-*readout\\s-+device\\s-+"))
     :end)
 
