@@ -1357,6 +1357,10 @@
      (1 font-lock-keyword-face)
      (2 font-lock-function-name-face))
 
+    ;; Labels
+    ("^\\s-*\\b\\(\\(?:\\sw\\|\\s_\\)+\\):"
+     (1 font-lock-function-name-face))
+
     ;; Types
     (,tl1-mode--type-re . font-lock-type-face)
 
