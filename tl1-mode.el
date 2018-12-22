@@ -1530,6 +1530,5 @@
   (add-function :before-until (local 'eldoc-documentation-function)
                 #'tl1-mode--eldoc-documentation-function))
 
-
 (provide 'tl1-mode)
 ;;; tl1-mode.el ends here
