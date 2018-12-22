@@ -1432,8 +1432,8 @@
                                           (tl1-mode--line-type))))
               (last-indent (car last-line))
               (last-line-type (cdr last-line)))
-         (cond
 
+         (cond
           ;; Left-aligned at start of buffer
           ((bobp) 0)
 
@@ -1451,6 +1451,11 @@
            last-indent)
 
           ((eq block :start-end) (- last-indent tab-width))
+
+          ;; This line is the end of a block, last was start
+          ((and (eq :end block)
+                (eq :start last-line-type))
+           last-indent)
 
           ;; Last line was start of a block
           ((or (eq :start last-line-type)
