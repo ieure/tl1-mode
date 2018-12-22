@@ -30,6 +30,7 @@
 
 (require 'eldoc)
 (require 'cl-lib)
+(require 'seq)
 
 (defun tl1-mode--word-opt (words)
   "Return a regexp to match whole words in a string in the list WORDS."
@@ -1343,7 +1344,7 @@
    '("numeric" "floating" "string" "array"))
   "A list of all types known to TL/1.")
 
-(defvar tl1-mode--font-lock-keywords
+(defconst tl1-mode--font-lock-keywords
   `(
     ;; Built-ins
     (,tl1-mode--builtin-re . font-lock-builtin-face)
@@ -1364,9 +1365,10 @@
 
     ;; Constants
     ("\\b\\([0-9]+\\|\$[0-9a-f]+\\)" . font-lock-constant-face))
+
   "Font-locking defintions for ‘tl1-mode’.")
 
-(defvar tl1-mode--syntax-table
+(defconst tl1-mode--syntax-table
   (let ((table (make-syntax-table)))
     ;; A `!' is the start of a comment
     (modify-syntax-entry ?! "<" table)
@@ -1472,8 +1474,6 @@
   (when (tl1-mode--line-blankp)
     (goto-char (line-end-position))))
 
-
-
 ;;;###autoload
 (define-derived-mode tl1-mode prog-mode "TL/1"
   "Major mode for editing Fluke TL/1 source code."
@@ -1481,14 +1481,13 @@
   (setq tab-stop-list '(2 0))
   (setq tab-always-indent t)
 
-  (set-syntax-table tl1-mode-syntax-table)
-  (setq comment-start "!")
+  (set-syntax-table tl1-mode--syntax-table)
+  (set (make-local-variable 'comment-start) "!")
   (setq comment-use-syntax t)
   (setq fill-prefix nil)
   (setq indent-line-function #'tl1-mode-indent)
 
-  (set (make-local-variable 'font-lock-defaults)
-       '(tl1-mode--font-lock-keywords nil t)))
+  (setq font-lock-defaults '(tl1-mode--font-lock-keywords nil nil)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist
