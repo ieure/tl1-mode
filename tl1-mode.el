@@ -1377,6 +1377,7 @@
     table))
 
 (defun tl1-mode--line-blankp ()
+  "Is this line blank?"
   (re-search-forward "^\\s-*$" (line-end-position) t))
 
 (defun tl1-mode--skipback ()
