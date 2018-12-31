@@ -24,7 +24,9 @@
 
 ;;; Commentary:
 
-;; This is a major mode for editing Fluke TL/1 source code.
+;; This is a major mode for editing Fluke TL/1 source code.  TL/1 was a
+;; language used to control Fluke’s 9100 series of testing &
+;; troubleshooting mainframes.
 
 ;;; Code:
 
