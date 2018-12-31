@@ -1349,7 +1349,6 @@
     ;; Built-ins
     (,tl1-mode--builtin-re . font-lock-builtin-face)
     (,tl1-mode--operator-re . font-lock-builtin-face)
-
     (,tl1-mode--keyword-re . font-lock-keyword-face)
 
     ;; Programs & functions
@@ -1364,10 +1363,10 @@
     ;; Types
     (,tl1-mode--type-re . font-lock-type-face)
 
-    ;; Variables
+    ;; Variable assignment
     ("\\b\\(\\(?:\\sw\\|\\s_\\)+\\)\\s-+=" (1 font-lock-variable-name-face))
 
-    ;; Constants
+    ;; Numeric constants
     ("\\b\\([0-9]+\\|\$[0-9a-f]+\\)" . font-lock-constant-face))
 
   "Font-locking defintions for ‘tl1-mode’.")
@@ -1482,9 +1481,9 @@
 ;;;###autoload
 (define-derived-mode tl1-mode prog-mode "TL/1"
   "Major mode for editing Fluke TL/1 source code."
-  (setq tab-width 4)
-  (setq tab-stop-list '(2 0))
-  (setq tab-always-indent t)
+  (setq tab-width 4
+        tab-always-indent t
+        tab-stop-list '(2 0))
 
   (set-syntax-table tl1-mode--syntax-table)
   (set (make-local-variable 'comment-start) "!")
@@ -1523,7 +1522,8 @@
   "Return documentation for the TL/1 function at point."
   (save-excursion
     (save-match-data
-      (if-let ((doc (cdr (assoc (tl1-mode--eldoc-function-at-point) tl1-mode--function-documentation))))
+      (if-let ((doc (cdr (assoc (tl1-mode--eldoc-function-at-point)
+                                tl1-mode--function-documentation))))
           (tl1-mode--eldoc-fontify
            (if (eq t eldoc-echo-area-use-multiline-p) doc
              (tl1-mode--eldoc-summary doc)))))))
