@@ -1400,24 +1400,22 @@
      :START-END -- End of the previous block, and the start of a new one.
      NIL        -- Not a block member, a normal statement."
   (cond
-   ;; Empty line
-   ((tl1-mode--line-blankp) nil)
-
    ;; Start of a block
-   ((or (looking-at "^\\s-*\\(program\\|function\\|loop\\|handle\\|exercise\\)")
-        (looking-at "^\\s-*declare\\s-*$")
-        (looking-at "^\\s-*if.*then\\s-*$")
-        (looking-at "^\\s-*arm\\s-+device\\s-+")
-        (looking-at "^\\s-*for\\s-+"))
+
+   ((looking-at (rx bol (0+ space) bow
+                    (or "program" "function" "for" "loop" "handle" "exercise"
+                        (: "declare" eow (regexp "\\s-*\\(?:!.*\\)?$"))
+                        (: "if" eow (1+ space) (0+ print) bow "then" eow (regexp "\\s-*\\(?:!.*\\)?$"))
+                        (: "arm" (1+ space) "device" eow))))
     :start)
 
    ;; End of one block, start of another.
    ((looking-at "^\\s-*else") :start-end)
 
    ;; End of a block
-   ((or (looking-at "^\\s-*end")
-        (looking-at "^\\s-*next")
-        (looking-at "^\\s-*readout\\s-+device\\s-+"))
+   ((looking-at (rx bol (0+ space)
+                    (or "end" "next"
+                        (: "readout" (1+ space) "device" (1+ space)))))
     :end)
 
    ;; Any other line
@@ -1430,12 +1428,14 @@
     (indent-line-to
      (save-match-data
        (let* ((case-fold-search t)
-              (block (save-excursion (goto-char (line-beginning-position))
-                                     (tl1-mode--line-type)))
-              (last-line (save-excursion (tl1-mode--skipback)
-                                         (cons
-                                          (current-indentation)
-                                          (tl1-mode--line-type))))
+              (this-line-type (save-excursion
+                                (goto-char (line-beginning-position))
+                                (tl1-mode--line-type)))
+              (last-line (save-excursion
+                           (tl1-mode--skipback)
+                           (cons
+                            (current-indentation)
+                            (tl1-mode--line-type))))
               (last-indent (car last-line))
               (last-line-type (cdr last-line)))
 
@@ -1443,35 +1443,17 @@
           ;; Left-aligned at start of buffer
           ((bobp) 0)
 
-          ((or
-            ;; Normal statements align together
-            (and (not block) (not last-line-type))
-
-            ;; Blocks align together
-            (and (eq :start block)
-                 (eq :end last-line-type))
-
-            (and (eq :end block)
-                 (eq :start-end last-line-type)))
-
-           last-indent)
-
-          ((eq block :start-end) (- last-indent tab-width))
-
-          ;; This line is the end of a block, last was start
-          ((and (eq :end block)
-                (eq :start last-line-type))
-           last-indent)
-
-          ;; Last line was start of a block
+          ;; Last line started an indented block
           ((or (eq :start last-line-type)
                (eq :start-end last-line-type))
            (+ last-indent tab-width))
 
-          ;; This line is the end of a block
-          ((eq block :end) (- last-indent tab-width))
+          ;; This line ends an indented block
+          ((or (eq :end this-line-type)
+               (eq :start-end this-line-type))
+           (- last-indent tab-width))
 
-          ;; Catch-all
+          ;; Otherwise, maintain indententation
           (t last-indent))))))
 
   ;; If the line is blank, move point to the end of it.
