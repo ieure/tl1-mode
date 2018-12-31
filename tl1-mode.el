@@ -1452,7 +1452,7 @@
 
      ;; This line ends an indented block
      ((memq this-line '(:end :start-end))
-      (- last-indent tab-width))
+      (- last-indent (if (eq last-line :start) 0 tab-width)))
 
      ;; Otherwise, maintain indententation
      (t last-indent))))
