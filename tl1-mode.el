@@ -1402,8 +1402,8 @@
      :START-END -- End of the previous block, and the start of a new one.
      NIL        -- Not a block member, a normal statement."
   (cond
-   ;; Start of a block
 
+   ;; Start of a block
    ((looking-at
      (rx bol (0+ space) bow
          (or "program" "function" "for" "loop" "handle" "exercise"
