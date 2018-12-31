@@ -3,7 +3,7 @@
 ;; Copyright (C) 2017, 2018  Ian Eure
 
 ;; Author: Ian Eure <ian.eure@gmail.com>
-;; Version: 1.0
+;; Version: 1.1
 ;; URL: https://github.com/ieure/tl1-mode
 ;; Package-Requires: ((emacs "25"))
 ;; Keywords: languages
