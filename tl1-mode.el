@@ -1402,59 +1402,66 @@
   (cond
    ;; Start of a block
 
-   ((looking-at (rx bol (0+ space) bow
-                    (or "program" "function" "for" "loop" "handle" "exercise"
-                        (: "declare" eow (regexp "\\s-*\\(?:!.*\\)?$"))
-                        (: "if" eow (1+ space) (0+ print) bow "then" eow (regexp "\\s-*\\(?:!.*\\)?$"))
-                        (: "arm" (1+ space) "device" eow))))
+   ((looking-at
+     (rx bol (0+ space) bow
+         (or "program" "function" "for" "loop" "handle" "exercise"
+             (: "declare" eow (regexp "\\s-*\\(?:!.*\\)?$"))
+             (: "if" eow (1+ space) (0+ print) bow "then" eow
+                (regexp "\\s-*\\(?:!.*\\)?$"))
+             (: "arm" (1+ space) "device" eow))))
     :start)
 
    ;; End of one block, start of another.
-   ((looking-at "^\\s-*else") :start-end)
+   ((looking-at (rx bol (0+ space) "else" eow))
+    :start-end)
 
    ;; End of a block
-   ((looking-at (rx bol (0+ space)
-                    (or "end" "next"
-                        (: "readout" (1+ space) "device" (1+ space)))))
+   ((looking-at
+     (rx bol (0+ space)
+         (or "end" "next"
+             (: "readout" (1+ space) "device" (1+ space)))))
     :end)
 
    ;; Any other line
    (t nil)))
 
+(defun tl1-mode--indent-data ()
+  "Return (THIS-LINE-TYPE LAST-LINE-TYPE LAST-INDENT)."
+  (save-match-data
+    (let ((case-fold-search t))
+      (cons (save-excursion
+              (goto-char (line-beginning-position))
+              (tl1-mode--line-type))
+
+            (save-excursion
+              (tl1-mode--skipback)
+              (list
+               (tl1-mode--line-type)
+               (current-indentation)))))))
+
+(defun tl1-mode--indent-column ()
+  "Return the column to indent the current line to."
+  (seq-let [this-line last-line last-indent] (tl1-mode--indent-data)
+    (cond
+     ;; Left-aligned at start of buffer
+     ((bobp) 0)
+
+     ;; Last line started an indented block
+     ((memq last-line '(:start :start-end))
+      (+ last-indent tab-width))
+
+     ;; This line ends an indented block
+     ((memq this-line '(:end :start-end))
+      (- last-indent tab-width))
+
+     ;; Otherwise, maintain indententation
+     (t last-indent))))
+
 (defun tl1-mode-indent ()
   "Indent line for TL/1 mode."
   (interactive)
   (save-excursion
-    (indent-line-to
-     (save-match-data
-       (let* ((case-fold-search t)
-              (this-line-type (save-excursion
-                                (goto-char (line-beginning-position))
-                                (tl1-mode--line-type)))
-              (last-line (save-excursion
-                           (tl1-mode--skipback)
-                           (cons
-                            (current-indentation)
-                            (tl1-mode--line-type))))
-              (last-indent (car last-line))
-              (last-line-type (cdr last-line)))
-
-         (cond
-          ;; Left-aligned at start of buffer
-          ((bobp) 0)
-
-          ;; Last line started an indented block
-          ((or (eq :start last-line-type)
-               (eq :start-end last-line-type))
-           (+ last-indent tab-width))
-
-          ;; This line ends an indented block
-          ((or (eq :end this-line-type)
-               (eq :start-end this-line-type))
-           (- last-indent tab-width))
-
-          ;; Otherwise, maintain indententation
-          (t last-indent))))))
+    (indent-line-to (tl1-mode--indent-column)))
 
   ;; If the line is blank, move point to the end of it.
   (when (tl1-mode--line-blankp)
