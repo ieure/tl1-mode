@@ -1,6 +1,6 @@
 ;;; tl1-mode.el --- Fluke TL/1 mode                  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017, 2018  Ian Eure
+;; Copyright (C) 2017, 2018, 2019  Ian Eure
 
 ;; Author: Ian Eure <ian.eure@gmail.com>
 ;; Version: 1.3
@@ -1448,13 +1448,13 @@
      ;; Left-aligned at start of buffer
      ((bobp) 0)
 
-     ;; Last line started an indented block
-     ((memq last-line '(:start :start-end))
-      (+ last-indent tab-width))
-
      ;; This line ends an indented block
      ((memq this-line '(:end :start-end))
       (- last-indent (if (eq last-line :start) 0 tab-width)))
+
+     ;; Last line started an indented block
+     ((memq last-line '(:start :start-end))
+      (+ last-indent tab-width))
 
      ;; Otherwise, maintain indententation
      (t last-indent))))
