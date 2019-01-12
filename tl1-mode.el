@@ -1450,8 +1450,10 @@
      ((bobp) 0)
 
      ;; Two start/ends in a row
-     ((and (eq this-line last-line)
-           (eq this-line :start-end))
+     ((or (and (eq this-line last-line)
+               (eq this-line :start-end))
+          (and (eq this-line :end)
+               (eq last-line :start-end)))
       last-indent)
 
      ;; This line ends an indented block
