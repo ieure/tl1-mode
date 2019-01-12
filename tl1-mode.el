@@ -1406,11 +1406,12 @@
    ;; Start of a block
    ((looking-at
      (rx bol (0+ space) bow
-         (or "program" "function" "for" "loop" "handle" "exercise"
-             (: "declare" eow (regexp "\\s-*\\(?:!.*\\)?$"))
-             (: "if" eow (1+ space) (0+ print) bow "then" eow
-                (regexp "\\s-*\\(?:!.*\\)?$"))
-             (: "arm" (1+ space) "device" eow))))
+         (or
+          (: (or "program" "function" "for" "loop" "handle" "exercise") eow)
+          (: "declare" eow (regexp "\\s-*\\(?:!.*\\)?$"))
+          (: "if" eow (1+ space) (0+ print) bow "then" eow
+             (regexp "\\s-*\\(?:!.*\\)?$"))
+          (: "arm" (1+ space) "device" eow))))
     :start)
 
    ;; End of one block, start of another.
