@@ -1449,6 +1449,11 @@
      ;; Left-aligned at start of buffer
      ((bobp) 0)
 
+     ;; Two start/ends in a row
+     ((and (eq this-line last-line)
+           (eq this-line :start-end))
+      last-indent)
+
      ;; This line ends an indented block
      ((memq this-line '(:end :start-end))
       (- last-indent (if (eq last-line :start) 0 tab-width)))
