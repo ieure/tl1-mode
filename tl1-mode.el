@@ -1518,7 +1518,9 @@
 
 (defun tl1-mode--eldoc-function-at-point ()
   "Return the TL/1 function at point."
-  (thing-at-point 'word))
+  (save-excursion
+    (re-search-backward (rx (not (any space))) (line-beginning-position) t)
+    (thing-at-point 'word)))
 
 (defun tl1-mode--eldoc-documentation-function ()
   "Return documentation for the TL/1 function at point."
