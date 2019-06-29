@@ -1329,10 +1329,13 @@
 
   "Documentation for every function in TL/1.")
 
+(defconst tl1-mode--documented-functions
+  (mapcar #'car tl1-mode--function-documentation)
+  "All TL/1 functions which have documentation.")
+
 (defconst tl1-mode--builtin-re
   (tl1-mode--word-opt
-   (cl-loop for func in tl1-mode--function-documentation
-            for name = (car func)
+   (cl-loop for name in tl1-mode--documented-functions
             unless (seq-contains tl1-mode--keywords name)
             collect name))
   "TL/1 built-in functions.")
@@ -1482,20 +1485,26 @@
   (when (tl1-mode--line-blankp)
     (goto-char (line-end-position))))
 
+(defvar tl1-mode-map
+  (let ((kmap (make-sparse-keymap)))
+    (set-keymap-parent kmap prog-mode-map)
+    (define-key kmap (kbd "M-.") #'tl1-help)
+    kmap))
+
 ;;;###autoload
 (define-derived-mode tl1-mode prog-mode "TL/1"
   "Major mode for editing Fluke TL/1 source code."
+  :syntax-table tl1-mode--syntax-table
+  :group 'languages
+
+  (set (make-local-variable 'comment-start) "!")
   (setq tab-width 4
         tab-always-indent t
-        tab-stop-list '(2 0))
-
-  (set-syntax-table tl1-mode--syntax-table)
-  (set (make-local-variable 'comment-start) "!")
-  (setq comment-use-syntax t)
-  (setq fill-prefix nil)
-  (setq indent-line-function #'tl1-mode-indent)
-
-  (setq font-lock-defaults '(tl1-mode--font-lock-keywords nil nil)))
+        tab-stop-list '(2 0)
+        comment-use-syntax t
+        fill-prefix nil
+        indent-line-function #'tl1-mode-indent
+        font-lock-defaults '(tl1-mode--font-lock-keywords nil nil)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist
@@ -1538,6 +1547,42 @@
   (interactive)
   (add-function :before-until (local 'eldoc-documentation-function)
                 #'tl1-mode--eldoc-documentation-function))
+
+(defvar tl1-help-mode-map
+  (let ((kmap (make-sparse-keymap)))
+    (define-key kmap "q" #'bury-buffer)
+    (define-key kmap "." #'tl1-help)
+    (define-key kmap "n" #'next-line)
+    (define-key kmap "p" #'previous-line)
+    kmap))
+
+(define-derived-mode tl1-help-mode help-mode "TL/1 Help"
+  "Major mode for showing TL/1 Help"
+  (use-local-map tl1-help-mode-map))
+
+(defvar tl1-help-mode--history nil)
+
+(defun tl1-help (thing)
+  "Show help for a TL/1 function."
+  (interactive
+   (list (if (seq-contains tl1-mode--documented-functions
+                           (tl1-mode--eldoc-function-at-point))
+             (tl1-mode--eldoc-function-at-point)
+           (completing-read "Function: "
+                            (mapcar #'car tl1-mode--function-documentation)
+                            nil t (tl1-mode--eldoc-function-at-point)))))
+  (pop-to-buffer "*TL/1 Help*")
+  (tl1-help-mode)
+  (setq buffer-read-only nil)
+  (erase-buffer)
+  (thread-first (assoc thing tl1-mode--function-documentation)
+    (cdr)
+    (tl1-mode--eldoc-fontify)
+    (insert))
+  (goto-char (point-min))
+  (setq tl1-help-mode--history (cons thing tl1-help-mode--history)
+        buffer-read-only t
+        buffer-modified-p nil))
 
 (provide 'tl1-mode)
 ;;; tl1-mode.el ends here
