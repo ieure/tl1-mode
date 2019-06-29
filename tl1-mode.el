@@ -1331,9 +1331,10 @@
 
 (defconst tl1-mode--builtin-re
   (tl1-mode--word-opt
-   (cl-remove-if (lambda (builtin)
-                   (seq-contains tl1-mode--keywords builtin))
-                 (mapcar #'car tl1-mode--function-documentation)))
+   (cl-loop for func in tl1-mode--function-documentation
+            for name = (car func)
+            unless (seq-contains tl1-mode--keywords name)
+            collect name))
   "TL/1 built-in functions.")
 
 (defconst tl1-mode--operator-re
