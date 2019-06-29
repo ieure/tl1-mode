@@ -1383,15 +1383,19 @@
 
 (defun tl1-mode--line-blankp ()
   "Is this line blank?"
-  (re-search-forward "^\\s-*$" (line-end-position) t))
+  (looking-at
+   ; Line is blank if if has...
+   (rx
+    bol
+    (* space)                       ; Any number of spaces after start
+    (*? (syntax comment-start) (* anything)) ; Or a comment
+    eol)))                                   ; Then ends
 
 (defun tl1-mode--skipback ()
   "Move backwards to the first non-blank line, or beginning of buffer."
   (while (progn (forward-line -1)
                 (and (not (bobp))
-                     (or
-                      (looking-at "^\\s-*$")
-                      (looking-at "^\\s-*!.*$"))))))
+                     (tl1-mode--line-blankp)))))
 
 (defun tl1-mode--line-type ()
   "Determine the type of the current line.
